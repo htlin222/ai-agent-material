@@ -1,0 +1,436 @@
+# Single source of truth for the deck, together with deck/assets/*.png.
+# Build: python3 tools/build_deck.py   →  build/deck.pptx, build/deck.pdf, build/png/*.png
+#
+# Layouts: title · statement · keyword · figure · rule · code · columns · stat · list · quote · blank
+# Slide text is English. `notes` are the speaker's own notes (Traditional Chinese).
+# Every slide carries `refs` (keys into [refs]); the footer prints them in APA 7.
+
+[meta]
+title = "AI Agents in Clinical Medicine: What Does Not Expire"
+author = "Hsieh-Ting Lin, MD"
+affiliation = "Department of Medical Oncology, Koo Foundation Sun Yat-Sen Cancer Center"
+venue = "Taipei Medical University"
+year = 2026
+
+[theme]
+sans_latin = "Inter"
+sans_cjk = "Noto Sans CJK TC"
+mono = "DejaVu Sans Mono"
+ink = "000000"
+grey = "767676"
+paper = "FFFFFF"
+
+# ───────────────────────────── Act 0 · Opening
+
+[[slide]]
+layout = "title"
+title = "AI Agents in Clinical Medicine"
+subtitle = "What does not expire"
+refs = ["lin2026"]
+notes = "不自我介紹，直接進下一頁。"
+
+[[slide]]
+layout = "statement"
+kicker = "Disclosure"
+text = "No financial conflicts of interest related to this talk."
+sub = "Paid tools in daily use: Claude, ChatGPT (personal subscriptions)."
+refs = ["lin2026"]
+notes = "照實揭露；如有變動，上台前改這一頁。"
+
+[[slide]]
+layout = "figure"
+image = "phone.png"
+caption = "Five questions from a chatbot. Two were ones a resident might have missed."
+refs = ["lin2026"]
+notes = "「上個月有位病人把手機推到我面前。」停三秒，不給答案。換成真實案例並去識別化。"
+
+[[slide]]
+layout = "statement"
+text = "From talking  →  to doing"
+sub = "From answering questions to reading files, editing them, and running commands."
+refs = ["yao2023"]
+notes = "為什麼是現在：這就是這一兩年的事。"
+
+[[slide]]
+layout = "statement"
+kicker = "This slide expires next year"
+text = "OpenClaw   NotebookLM   n8n   Photoshop"
+text_grey = true
+size = 36
+refs = ["lin2026"]
+notes = "所以今天不教怎麼下 prompt。"
+
+[[slide]]
+layout = "figure"
+image = "box.png"
+caption = "Every tool wraps a principle. Today we open the box."
+refs = ["parnas1972"]
+notes = "封裝與 meta。伏筆：最後一層是什麼，結尾揭曉。"
+
+[[slide]]
+layout = "keyword"
+word = "/Huh?"
+gloss = "If it doesn’t make sense, say so out loud."
+refs = ["lin2026"]
+notes = "約定：聽不懂就喊「蛤」。今天每個名詞都要通過蛤測試。轉場：要知道什麼不會過期，得先知道 AI 到底是什麼。"
+
+# ───────────────────────────── Act 1 · First principles
+
+[[slide]]
+layout = "figure"
+image = "regression.png"
+caption = "Learning: keep adjusting a and b until the error shrinks."
+refs = ["legendre1805"]
+notes = "醫師都做過這件事。"
+
+[[slide]]
+layout = "keyword"
+word = "/Learning"
+gloss = "From predicting a number to predicting the next word."
+refs = ["vaswani2017"]
+notes = "標明這是類比：實際上是從詞表中挑下一個字，比較接近分類。"
+
+[[slide]]
+layout = "figure"
+image = "nexttoken.png"
+caption = "Predict the next word, again and again, and you get a paragraph."
+refs = ["vaswani2017"]
+notes = "數字為示意。語言是所有知識共用的介面，所以它什麼都能談。"
+
+[[slide]]
+layout = "keyword"
+word = "/Stochastic"
+gloss = "Ask the same question twice; the answers can differ."
+refs = ["he2025"]
+notes = "temperature 設 0 也不保證一樣。但藥物反應、疾病進程本來就是機率，醫師是處理不確定性的專家。"
+
+[[slide]]
+layout = "figure"
+image = "agency.png"
+title = "/Agency"
+caption = "LLM + tools + loop = agent. You still sign."
+refs = ["yao2023"]
+notes = "它不只回答，還會動手。能動性在哪裡，責任就在哪裡；簽名的仍然是你。"
+
+[[slide]]
+layout = "rule"
+n = "1"
+text = "Ask whether you need AI before asking whether you need generative AI."
+sub = "An abnormal-lab alert needs a rule, not a model."
+refs = ["lin2026"]
+notes = "把三年病歷整理成一頁摘要，才需要會擲骰子的模型。轉場：一台會擲骰子的引擎，要怎麼變成可以信任的工作？"
+
+# ───────────────────────────── Act 2 · Systems
+
+[[slide]]
+layout = "keyword"
+word = "/BREW"
+gloss = "Bash · Read · Edit · Write"
+refs = ["anthropic2025"]
+notes = "不管包裝多花俏，所有 agent 拆開來就是讀檔、改檔、寫檔、執行指令。"
+
+[[slide]]
+layout = "code"
+code = """
+Read   reports/2026-10-28_CT.txt
+Read   notes/summary.md
+Edit   notes/summary.md
+Bash   check_format notes/summary.md
+Edit   notes/summary.md
+Bash   check_format notes/summary.md
+Write  notes/summary_v2.md"""
+caption = "Open the box: four verbs, nothing else."
+refs = ["anthropic2025"]
+notes = "封裝回收。換成自己的 agent 真實紀錄截圖也可以。"
+
+[[slide]]
+layout = "figure"
+image = "loops.png"
+title = "/Cybernetic"
+caption = "Inside a feedback loop, a random generator becomes checkable."
+refs = ["wiener1948"]
+notes = "血糖高 → 胰島素 → 血糖降。Agent 也一樣：看現況、動手、驗證、再看。"
+
+[[slide]]
+layout = "keyword"
+word = "/Plaintext"
+gloss = "Agents read and write plain text. Change models; keep your files."
+refs = ["mcilroy1978"]
+notes = "Unix：小工具各做一件事，用 Bash 組起來。介面是文字，就不綁定模型。"
+
+[[slide]]
+layout = "figure"
+image = "pipeline.png"
+caption = "One example end to end: a loop, a state, a version history."
+refs = ["eisenhauer2009"]
+notes = "每一步都指出用的是 BREW 哪個動詞。"
+
+[[slide]]
+layout = "rule"
+n = "3 · 5"
+text = "Every solution is a system, not just code."
+sub = "Most tasks don’t need the frontier model."
+refs = ["lin2026"]
+notes = "流程還包含誰看、誰簽、出錯找誰。整理報告不需要最貴的那個。"
+
+[[slide]]
+layout = "rule"
+n = "6"
+text = "Done it three times? Write it down as a reusable instruction."
+sub = "“Skill” is this year’s name for it. Writing it down does not expire."
+refs = ["lin2026"]
+notes = ""
+
+[[slide]]
+layout = "rule"
+n = "7"
+text = "Learn the command line early. The prognosis is better."
+sub = "The CLI is Bash, the language agents already speak."
+refs = ["mcilroy1978"]
+notes = "轉場：系統在電腦裡跑得很順，進到病房就是另一回事。"
+
+# ───────────────────────────── Act 3 · Translation
+
+[[slide]]
+layout = "keyword"
+word = "/Translational"
+gloss = "Works on the computer ≠ works on the ward."
+refs = ["woolf2008"]
+notes = "bench → bedside，就是 code → clinic。efficacy 與 effectiveness。"
+
+[[slide]]
+layout = "keyword"
+word = "/Situated"
+gloss = "WBC 15,000: one meaning in the ED, another in clinic."
+refs = ["suchman1987"]
+notes = "AI 讀得到數字，讀不到情境。"
+
+[[slide]]
+layout = "figure"
+image = "hitl.png"
+caption = "“Human in the loop” is not a solution yet: automation bias, alert fatigue."
+refs = ["parasuraman2010"]
+notes = "這是已知的問題，不是答案。說出來，不要美化。"
+
+[[slide]]
+layout = "figure"
+image = "label.png"
+refs = ["lin2026"]
+notes = "內科聽眾零翻譯成本；笑一下就好，不要拖。"
+
+[[slide]]
+layout = "statement"
+kicker = "The last section of the label"
+text = "Post-marketing surveillance"
+sub = "Models change silently. The same workflow can behave differently next month."
+refs = ["chen2024"]
+notes = "你的系統要能檢查出來（回接第 2 幕的迴圈）。"
+
+[[slide]]
+layout = "code"
+code = """
+“This drug reduces mortality by 30%.” [1]
+
+[1] A real paper that does not say this."""
+caption = "A citation is not support. Give a PICO, ask for counter-evidence, read the source."
+refs = ["wu2025"]
+notes = "以 OpenEvidence 等工具的答案為例：看起來像證據。換成一張真實截圖也可以。"
+
+[[slide]]
+layout = "figure"
+image = "phone.png"
+caption = "Look at what the patient asked, not at what the AI answered."
+refs = ["lin2026"]
+notes = "回到那支手機。先不給結論。"
+
+[[slide]]
+layout = "rule"
+n = "4 · 2 · 8"
+text = "Fix what everyone hates first. Count the cost before you build."
+sub = "Feasible? Time and cognitive cost? Reinventing the wheel?"
+refs = ["lin2026"]
+notes = "④ 與 ②。"
+
+[[slide]]
+layout = "rule"
+n = "8"
+text = "Never give one agent all three: private data, untrusted content, a way to send data out."
+sub = "The lethal trifecta."
+refs = ["willison2025"]
+notes = "死亡三角。轉場：真正的問題不是答案對不對，而是我們怎麼知道一件事是真的。"
+
+# ───────────────────────────── Act 4 · Epistemology
+
+[[slide]]
+layout = "figure"
+image = "tree.png"
+title = "/Schema"
+caption = "Experts organize what they know; novices list it."
+refs = ["bartlett1932"]
+notes = "鑑別診斷就是 schema。"
+
+[[slide]]
+layout = "code"
+code = """
+[Adjuvant chemo]: Give adjuvant chemotherapy.
+  + <Risk>: Stage III colon cancer.
+  + <Fitness>: ECOG 1.
+  - <Kidney>: eGFR 28; avoid capecitabine."""
+caption = "Write the argument as a tree; anyone can point to the weak branch."
+refs = ["voigt2024"]
+notes = "這也是第 3 幕「看起來像證據」的解法。"
+
+[[slide]]
+layout = "figure"
+image = "searchlight.png"
+title = "/Searchlight"
+caption = "AI is a brighter torch. You still decide where to point it."
+refs = ["popper1972"]
+notes = "知識不是倒進水桶的觀察，是帶著問題投向黑暗的光束。"
+
+[[slide]]
+layout = "blank"
+text = "A searchlight that never stops moving lights up nothing."
+refs = ["lin2026"]
+notes = "光束一直晃，什麼都照不清楚。伏筆，結尾會回來。"
+
+[[slide]]
+layout = "rule"
+n = "9"
+text = "Don’t copy a guru’s workflow. Refine your own."
+sub = "Their searchlight is pointed at their questions."
+refs = ["lin2026"]
+notes = "中場轉場：如果 AI 都會做了，那我們每天做的事，有多少其實是在表演？"
+
+# ───────────────────────────── Act 5 · Service, teaching, research
+
+[[slide]]
+layout = "keyword"
+word = "/Dramaturgical"
+gloss = "Front stage and back stage: you at grand rounds, you at the nurses’ station."
+refs = ["goffman1959"]
+notes = "同一個人的兩種演出。"
+
+[[slide]]
+layout = "statement"
+kicker = "Service"
+text = "Many notes are written for the system, not for the patient."
+sub = "Hand over what AI can do, and give the time back to the patient."
+refs = ["goffman1959"]
+notes = "伏筆：還給病人之後要做什麼，第 6 幕回答。"
+
+[[slide]]
+layout = "statement"
+kicker = "Teaching"
+text = "Polished slides will become worthless."
+sub = "This deck included. What stays valuable is live interaction and showing how to judge."
+refs = ["lin2026"]
+notes = ""
+
+[[slide]]
+layout = "statement"
+kicker = "Research"
+text = "When the pipeline speeds up, the bottleneck moves to the IRB."
+sub = "Falsifiable steps go to the pipeline. First-hand data can only come from people."
+refs = ["popper1959", "lin2026"]
+notes = "IRB in hurry。Garbage in, garbage out。"
+
+[[slide]]
+layout = "statement"
+text = "If AI can perform it, stop spending your time performing it."
+refs = ["lin2026"]
+notes = "轉場：表演和流程都被拿走之後，剩下的是什麼？"
+
+# ───────────────────────────── Act 6 · Telos
+
+[[slide]]
+layout = "stat"
+big = "78.6%"
+text = "of 585 evaluations preferred ChatGPT’s answer over a physician’s Reddit reply. Empathetic or very empathetic: 45.1% vs 4.6%."
+sub = "195 r/AskDocs questions; ChatGPT-3.5, late 2022."
+refs = ["ayers2023"]
+notes = "不辯護、不反駁，讓數字站在台上。"
+
+[[slide]]
+layout = "statement"
+text = "If empathetic words can be generated, what is left between two people?"
+sub = "Presence. Responsibility. Company."
+refs = ["ayers2023"]
+notes = "interpersonal skill 是人類最後的工作。"
+
+[[slide]]
+layout = "figure"
+image = "phone.png"
+caption = "He didn’t want a sixth answer. He wanted someone to read the five with him."
+refs = ["lin2026"]
+notes = "第三次出現。第 5 幕「把時間還給病人」在這裡回收。"
+
+[[slide]]
+layout = "list"
+title = "Discharge prescriptions"
+items = [
+  "Ask whether you need AI before asking whether you need generative AI.",
+  "Before building: feasible? time and cognitive cost? reinventing the wheel?",
+  "Every solution is a system, not just code.",
+  "Don’t chase trends. Fix what everyone hates first.",
+  "Most tasks don’t need the frontier model.",
+  "Done it three times? Write a reusable instruction.",
+  "Learn the command line; the earlier, the better the prognosis.",
+  "Never combine private data, untrusted content and outbound communication.",
+  "Refine your own workflow instead of copying a guru’s.",
+  "Live an analog life now and then, or your brain will rot.",
+]
+refs = ["lin2026", "willison2025"]
+notes = "快速回顧。行動目標：下週一，挑一件最討厭的事交給 agent。"
+
+[[slide]]
+layout = "rule"
+n = "10"
+text = "Live an analog life now and then, or your brain will rot."
+sub = "A searchlight that never stops moving lights up nothing."
+refs = ["lin2026"]
+notes = "回收第 33 頁。"
+
+[[slide]]
+layout = "keyword"
+word = "/Telos"
+gloss = "Open the last layer of the box, and you find the purpose."
+refs = ["aristotle2009"]
+notes = "回答第 6 頁：工具會過期，目的不會。"
+
+[[slide]]
+layout = "quote"
+text = "If I can stop one heart from breaking,\nI shall not live in vain."
+by = "Emily Dickinson"
+refs = ["dickinson1890"]
+notes = "停下來，是為了一個人。不列 Q&A 頁，停在這句。"
+
+# ───────────────────────────── APA 7 references (verified; see docs/references.md)
+
+[refs]
+lin2026 = "Lin, H.-T. (2026). *AI agents in clinical medicine: What does not expire* [Lecture]. Taipei Medical University."
+
+ayers2023 = "Ayers, J. W., Poliak, A., Dredze, M., Leas, E. C., Zhu, Z., Kelley, J. B., Faix, D. J., Goodman, A. M., Longhurst, C. A., Hogarth, M., & Smith, D. M. (2023). Comparing physician and artificial intelligence chatbot responses to patient questions posted to a public social media forum. *JAMA Internal Medicine, 183*(6), 589–596. https://doi.org/10.1001/jamainternmed.2023.1838"
+willison2025 = "Willison, S. (2025, June 16). The lethal trifecta for AI agents: Private data, untrusted content, and external communication. *Simon Willison’s Weblog*. https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/"
+popper1972 = "Popper, K. R. (1972). The bucket and the searchlight: Two theories of knowledge. In *Objective knowledge: An evolutionary approach* (Appendix 1). Clarendon Press."
+popper1959 = "Popper, K. R. (1959). *The logic of scientific discovery*. Hutchinson. (Original work published 1934)"
+goffman1959 = "Goffman, E. (1959). *The presentation of self in everyday life*. Doubleday."
+dickinson1890 = "Dickinson, E. (1890). *Poems* (M. L. Todd & T. W. Higginson, Eds.). Roberts Brothers."
+wiener1948 = "Wiener, N. (1948). *Cybernetics: Or control and communication in the animal and the machine*. Technology Press; John Wiley & Sons."
+mcilroy1978 = "McIlroy, M. D., Pinson, E. N., & Tague, B. A. (1978). UNIX time-sharing system: Foreword. *Bell System Technical Journal, 57*(6), 1899–1904. https://doi.org/10.1002/j.1538-7305.1978.tb02135.x"
+parasuraman2010 = "Parasuraman, R., & Manzey, D. H. (2010). Complacency and bias in human use of automation: An attentional integration. *Human Factors, 52*(3), 381–410. https://doi.org/10.1177/0018720810376055"
+woolf2008 = "Woolf, S. H. (2008). The meaning of translational research and why it matters. *JAMA, 299*(2), 211–213. https://doi.org/10.1001/jama.2007.26"
+vaswani2017 = "Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin, I. (2017). Attention is all you need. In I. Guyon et al. (Eds.), *Advances in Neural Information Processing Systems 30* (pp. 5998–6008). Curran Associates."
+he2025 = "He, H., & Thinking Machines Lab. (2025, September 10). Defeating nondeterminism in LLM inference. *Thinking Machines Lab: Connectionism*. https://doi.org/10.64434/tml.20250910"
+yao2023 = "Yao, S., Zhao, J., Yu, D., Du, N., Shafran, I., Narasimhan, K., & Cao, Y. (2023). ReAct: Synergizing reasoning and acting in language models. In *International Conference on Learning Representations*. https://openreview.net/forum?id=WE_vluYUL-X"
+minto2009 = "Minto, B. (2009). *The pyramid principle: Logic in writing and thinking* (3rd ed.). Financial Times Prentice Hall."
+bartlett1932 = "Bartlett, F. C. (1932). *Remembering: A study in experimental and social psychology*. Cambridge University Press."
+suchman1987 = "Suchman, L. A. (1987). *Plans and situated actions: The problem of human-machine communication*. Cambridge University Press."
+voigt2024 = "Voigt, C. (n.d.). *Argdown* [Computer software]. https://argdown.org"
+anthropic2025 = "Anthropic. (n.d.). *Tools reference*. Claude Code Docs. Retrieved November 1, 2026, from https://code.claude.com/docs/en/tools-reference"
+legendre1805 = "Legendre, A.-M. (1805). *Nouvelles méthodes pour la détermination des orbites des comètes*. Firmin Didot."
+parnas1972 = "Parnas, D. L. (1972). On the criteria to be used in decomposing systems into modules. *Communications of the ACM, 15*(12), 1053–1058. https://doi.org/10.1145/361598.361623"
+chen2024 = "Chen, L., Zaharia, M., & Zou, J. (2024). How is ChatGPT’s behavior changing over time? *Harvard Data Science Review, 6*(2). https://doi.org/10.1162/99608f92.5317da47"
+wu2025 = "Wu, K., Wu, E., Wei, K., Zhang, A., Casasola, A., Nguyen, T., Riantawan, S., Shi, P., Ho, D., & Zou, J. (2025). An automated framework for assessing how well LLMs cite relevant medical references. *Nature Communications, 16*, Article 3615. https://doi.org/10.1038/s41467-025-58551-6"
+aristotle2009 = "Aristotle. (2009). *The Nicomachean ethics* (D. Ross, Trans.; L. Brown, Rev.). Oxford University Press."
+eisenhauer2009 = "Eisenhauer, E. A., Therasse, P., Bogaerts, J., Schwartz, L. H., Sargent, D., Ford, R., Dancey, J., Arbuck, S., Gwyther, S., Mooney, M., Rubinstein, L., Shankar, L., Dodd, L., Kaplan, R., Lacombe, D., & Verweij, J. (2009). New response evaluation criteria in solid tumours: Revised RECIST guideline (version 1.1). *European Journal of Cancer, 45*(2), 228–247. https://doi.org/10.1016/j.ejca.2008.10.026"
