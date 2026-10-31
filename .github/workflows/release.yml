@@ -1,15 +1,12 @@
 # Build the slides (PPTX + PDF) and the trailer (MP4) from source, then publish them as a GitHub release.
-# Runs when a tag like v1.0 is pushed, or by hand from the Actions tab.
+# Runs on every push to main that touches the sources; the release tag is read from VERSION
+# (bump VERSION for a new release; an unchanged VERSION refreshes the files of the existing release).
 name: release
 on:
   push:
-    tags: ['v*']
+    branches: [main]
+    paths: ['deck/**', 'tools/**', 'trailer/**', 'VERSION', 'package.json', '.github/workflows/release.yml']
   workflow_dispatch:
-    inputs:
-      tag:
-        description: Release tag
-        required: true
-        default: v1.0
 permissions:
   contents: write
 jobs:
@@ -43,10 +40,16 @@ jobs:
           cp trailer/build/AI-Agents_Trailer_16x9.mp4 out/AI-Agents-Trailer-16x9-1080p.mp4
           cp build/sheet.png out/slides-contact-sheet.png
           ls -la out
+      - name: Read version
+        id: v
+        run: echo "tag=$(tr -d '[:space:]' < VERSION)" >> "$GITHUB_OUTPUT"
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
-          name: ${{ github.event.inputs.tag || github.ref_name }} · Taipei Medical University lecture
+          tag_name: ${{ steps.v.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ steps.v.outputs.tag }} · Taipei Medical University lecture
+          make_latest: true
+          overwrite_files: true
           body: |
             Slides (PPTX and PDF, 47 slides, English, black and white, an APA reference on every slide) and a
             53-second 16:9 1080p trailer, built from source by this workflow.
