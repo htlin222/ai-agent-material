@@ -1,0 +1,18 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>AI Agents · Trailer</title>
+<style>html,body{margin:0;background:#000}canvas{width:100%;max-width:960px;display:block;margin:auto}</style></head>
+<body><canvas id="c" width="1920" height="1080"></canvas>
+<script src="helpers.js"></script><script src="plan.js"></script><script src="trailer.js"></script><script src="music.js"></script>
+<script>
+(async function () {
+  const weights = [400, 500, 600, 700, 800, 900];
+  await Promise.all(weights.map(w => document.fonts.load(`${w} 100px Inter`)).concat([document.fonts.load('400 40px "DejaVu Sans Mono"'), document.fonts.load('700 40px "DejaVu Sans Mono"')]));
+  const c = document.getElementById('c'), ctx = c.getContext('2d');
+  T.frameURL = i => { T.render(ctx, i); return c.toDataURL('image/png'); };
+  if (!location.search.includes('record')) {          // preview: play in real time (no sound)
+    const t0 = performance.now(); (function loop() { T.render(ctx, Math.floor((performance.now() - t0) / 1000 * T.FPS) % T.frames); requestAnimationFrame(loop); })();
+  }
+  window.T = T; window.TMUS = TMUS; window.PLAN = PLAN;
+  T.readyFlag = true;
+})();
+</script></body></html>
