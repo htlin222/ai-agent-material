@@ -1,0 +1,54 @@
+# Build the slides (PPTX + PDF) and the trailer (MP4) from source, then publish them as a GitHub release.
+# Runs when a tag like v1.0 is pushed, or by hand from the Actions tab.
+name: release
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag
+        required: true
+        default: v1.0
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: System packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libreoffice-impress fonts-noto-cjk fonts-inter fonts-dejavu-core poppler-utils ffmpeg
+          fc-cache -f
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Python packages
+        run: pip install python-pptx pillow lxml numpy scipy soundfile espeakng-loader
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Node packages
+        run: npm install && npx playwright install --with-deps chromium
+      - name: Build slides
+        run: python3 tools/build_deck.py
+      - name: Build trailer
+        run: npm run trailer
+      - name: Collect assets
+        run: |
+          mkdir -p out
+          cp build/deck.pptx out/AI-Agents-in-Clinical-Medicine.pptx
+          cp build/deck.pdf out/AI-Agents-in-Clinical-Medicine.pdf
+          cp trailer/build/AI-Agents_Trailer_16x9.mp4 out/AI-Agents-Trailer-16x9-1080p.mp4
+          cp build/sheet.png out/slides-contact-sheet.png
+          ls -la out
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          name: ${{ github.event.inputs.tag || github.ref_name }} · Taipei Medical University lecture
+          body: |
+            Slides (PPTX and PDF, 47 slides, English, black and white, an APA reference on every slide) and a
+            53-second 16:9 1080p trailer, built from source by this workflow.
+            Slides come from `deck/deck.toml` + `deck/assets/*.png`; the trailer from `trailer/` (see `docs/trailer/`).
+          files: out/*

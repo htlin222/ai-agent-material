@@ -1,0 +1,13 @@
+{
+  "name": "ai-agent-material",
+  "private": true,
+  "type": "module",
+  "description": "Lecture deck and trailer for AI Agents in Clinical Medicine",
+  "scripts": {
+    "deck": "python3 tools/build_deck.py",
+    "trailer": "node trailer/render.mjs plan && node trailer/render.mjs music && python3 trailer/vo.py && node trailer/render.mjs video 0-1584 3 && bash trailer/mix.sh"
+  },
+  "dependencies": {
+    "playwright": "1.56.0"
+  }
+}
