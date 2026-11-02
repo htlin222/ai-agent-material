@@ -156,8 +156,8 @@ const T = { W: 1920, H: 1080, FPS: 30 };
       ctx.fillStyle = INK(a); ctx.fillRect(x0 + 110, y - 18, 250 * ln * appear, 14); ctx.fillRect(x0 + 110, y + 12, 160 * ln * appear, 14);
     });
     text(ctx, 'Five questions.', 900, 470, { size: 84, weight: 800, alpha: ease(E.outCubic, 0.4, 1.0, lb) });
-    text(ctx, 'Two were ones a', 900, 600, { size: 60, weight: 500, alpha: ease(E.outCubic, 4.2, 4.8, lb) * 0.85 });
-    text(ctx, 'resident might have missed.', 900, 680, { size: 60, weight: 500, alpha: ease(E.outCubic, 4.4, 5.0, lb) * 0.85 });
+    text(ctx, 'Two were sharper', 900, 600, { size: 60, weight: 500, alpha: ease(E.outCubic, 4.2, 4.8, lb) * 0.85 });
+    text(ctx, 'than a resident’s.', 900, 680, { size: 60, weight: 500, alpha: ease(E.outCubic, 4.4, 5.0, lb) * 0.85 });
   };
   K.rx = (ctx, lb, p) => {
     const u = ease(E.outExpo, 0, 0.3, lb);

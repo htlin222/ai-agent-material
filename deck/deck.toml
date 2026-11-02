@@ -40,7 +40,7 @@ notes = "照實揭露；如有變動，上台前改這一頁。"
 [[slide]]
 layout = "figure"
 image = "phone.png"
-caption = "Five questions from a chatbot. Two were ones a resident might have missed."
+caption = "A patient brought five questions from an AI. Two were sharper than a resident’s."
 refs = ["lin2026"]
 notes = "「上個月有位病人把手機推到我面前。」停三秒，不給答案。換成真實案例並去識別化。"
 
